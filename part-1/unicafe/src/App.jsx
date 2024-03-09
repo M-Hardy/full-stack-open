@@ -13,10 +13,13 @@ const StatisticLine = ({ title, value }) => (
 
 const Header = ({ value }) => <h1>{value}</h1>;
 
-const Statistics = ({ good, neutral, bad, total, avg, positivePercentage }) => {
+const Statistics = ({ good, neutral, bad }) => {
+  const total = good + neutral + bad;
   if (total === 0) {
     return "No feedback given";
   } else {
+    const avg = (good - bad) / total;
+    const positivePercentage = `${(good / total) * 100} %`;
     return (
       <table>
         <tbody>
@@ -25,7 +28,7 @@ const Statistics = ({ good, neutral, bad, total, avg, positivePercentage }) => {
           <StatisticLine title="bad" value={bad} />
           <StatisticLine title="all" value={total} />
           <StatisticLine title="average" value={avg} />
-          <StatisticLine title="positive" value={positivePercentage + "%"} />
+          <StatisticLine title="positive" value={positivePercentage} />
         </tbody>
       </table>
     );
@@ -37,33 +40,15 @@ const App = () => {
   const [good, setGood] = useState(0);
   const [bad, setBad] = useState(0);
   const [neutral, setNeutral] = useState(0);
-  const [total, setTotal] = useState(0);
-  const [avg, setAvg] = useState(0);
-  const [positivePercentage, setPositivePercentage] = useState(0);
 
   const handleGoodClick = () => {
-    const newGood = good + 1;
-    const newTotal = total + 1;
-    setGood(newGood);
-    setTotal(newTotal);
-    setAvg((newGood - bad) / newTotal);
-    setPositivePercentage((newGood / newTotal) * 100);
+    setGood(good + 1);
   };
   const handleBadClick = () => {
-    const newBad = bad + 1;
-    const newTotal = total + 1;
-    setBad(newBad);
-    setTotal(newTotal);
-    setAvg((good - newBad) / newTotal);
-    setPositivePercentage((good / newTotal) * 100);
+    setBad(bad + 1);
   };
   const handleNeutralClick = () => {
-    const newNeutral = neutral + 1;
-    const newTotal = total + 1;
-    setNeutral(newNeutral);
-    setTotal(newTotal);
-    setAvg((good - bad) / newTotal);
-    setPositivePercentage((good / newTotal) * 100);
+    setNeutral(neutral + 1);
   };
 
   return (
@@ -73,14 +58,7 @@ const App = () => {
       <Button handleClick={handleNeutralClick} text="neutral" />
       <Button handleClick={handleBadClick} text="bad" />
       <Header value="statistics" />
-      <Statistics
-        good={good}
-        bad={bad}
-        neutral={neutral}
-        total={total}
-        avg={avg}
-        positivePercentage={positivePercentage}
-      />
+      <Statistics good={good} bad={bad} neutral={neutral} />
     </div>
   );
 };
