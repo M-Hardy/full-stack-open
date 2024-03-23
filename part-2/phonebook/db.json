@@ -1,24 +1,24 @@
 {
-  "persons": [
-    {
-      "id": "899a",
-      "name": "Dan Abramov",
-      "number": "12-43-234345"
-    },
-    {
-      "id": "c573",
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122"
-    },
-    {
-      "id": "b6ab",
-      "name": "Knight Artorius",
-      "number": "911"
-    },
-    {
-      "id": "fa40",
-      "name": "test1",
-      "number": "2"
-    }
-  ]
+    "persons": [
+        {
+            "id": "899a",
+            "name": "Dan Abramov",
+            "number": "12-43-234345"
+        },
+        {
+            "id": "c573",
+            "name": "Mary Poppendieck",
+            "number": "39-23-6423122"
+        },
+        {
+            "id": "b6ab",
+            "name": "Knight Artorius",
+            "number": "911"
+        },
+        {
+            "id": "fa40",
+            "name": "test1",
+            "number": "2"
+        }
+    ]
 }
