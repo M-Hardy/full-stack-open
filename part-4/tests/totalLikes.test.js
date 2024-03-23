@@ -69,7 +69,7 @@ describe("total likes", () => {
         assert.strictEqual(result, 5);
     });
 
-    test("when list has multiple blogs, equals to the total of all blogs", () => {
+    test("when list has multiple blogs, equals total likes of all blogs", () => {
         const result = listHelper.totalLikes(blogs);
         assert.strictEqual(result, 36);
     });
