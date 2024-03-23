@@ -1,0 +1,46 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Test - First blog post!",
+    "author": "Arthur Hornaby",
+    "url": "https://...",
+    "likes": 1
+}
+
+###
+
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title": "SECOND blog post!",
+    "author": "Beatrix Measel",
+    "url": "https://...",
+    "likes": 125
+}
+
+###
+
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Yet Another Blog",
+    "author": "Tech Bro",
+    "url": "https://...",
+    "likes": 21
+}
+
+###
+
+POST http://localhost:3001/api/blogs
+content-type: application/json
+
+{
+    "title": "test to delete",
+    "author": "also test empty fields",
+    "url": "",
+    "likes": 0
+}
+

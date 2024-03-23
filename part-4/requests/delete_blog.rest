@@ -1,0 +1,9 @@
+DELETE http://localhost:3001/api/blogs/65ff31f67b1069c9b730e29b
+Content-Type: application/json
+
+{
+    "title": "test to delete",
+    "author": "also test empty fields",
+    "url": "",
+    "likes": 90000000000
+}
