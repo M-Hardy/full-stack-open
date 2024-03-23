@@ -1,2 +1,5 @@
 # Ignore text file documenting skipped optional FSO exercises
 skippedOptionalExercises.txt
+
+# Ignore env variable files
+.env
