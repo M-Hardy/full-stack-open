@@ -10,18 +10,17 @@ blogsRouter.get("/", async (request, response, next) => {
     }
 });
 
-blogsRouter.get("/:id", (request, response, next) => {
-    Blog.findById(request.params.id)
-        .then((blog) => {
-            if (blog) {
-                response.json(blog);
-            } else {
-                response.send(404).end();
-            }
-        })
-        .catch((error) => {
-            next(error);
-        });
+blogsRouter.get("/:id", async (request, response, next) => {
+    try {
+        const blog = await Blog.findById(request.params.id);
+        if (blog) {
+            response.json(blog);
+        } else {
+            response.send(404).end();
+        }
+    } catch (exception) {
+        next(exception);
+    }
 });
 
 blogsRouter.post("/", async (request, response, next) => {
@@ -43,15 +42,20 @@ blogsRouter.delete("/:id", async (request, response, next) => {
     }
 });
 
-blogsRouter.put("/:id", (request, response, next) => {
+blogsRouter.put("/:id", async (request, response, next) => {
     const blog = request.body;
-    Blog.findByIdAndUpdate(request.params.id, blog, {
-        new: true,
-    })
-        .then((updatedBlog) => {
-            response.json(updatedBlog);
-        })
-        .catch((error) => next(error));
+    try {
+        const updatedBlog = await Blog.findByIdAndUpdate(
+            request.params.id,
+            blog,
+            {
+                new: true,
+            }
+        );
+        response.json(updatedBlog);
+    } catch (exception) {
+        next(exception);
+    }
 });
 
 module.exports = blogsRouter;
