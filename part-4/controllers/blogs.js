@@ -24,14 +24,14 @@ blogsRouter.get("/:id", (request, response, next) => {
         });
 });
 
-blogsRouter.post("/", (request, response, next) => {
+blogsRouter.post("/", async (request, response, next) => {
     const blog = new Blog(request.body);
-
-    blog.save()
-        .then((savedBlog) => {
-            response.status(201).json(savedBlog);
-        })
-        .catch((error) => next(error));
+    try {
+        const savedBlog = await blog.save();
+        response.status(201).json(savedBlog);
+    } catch (exception) {
+        next(exception);
+    }
 });
 
 blogsRouter.delete("/:id", (request, response, next) => {
