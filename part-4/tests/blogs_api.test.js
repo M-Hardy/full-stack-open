@@ -4,34 +4,14 @@ const supertest = require("supertest");
 const app = require("../app");
 const Blog = require("../models/blog");
 const mongoose = require("mongoose");
+const testHelper = require("./test_helper");
 
 const api = supertest(app);
-
-const initialBlogs = [
-    {
-        title: "blog1",
-        author: "author1",
-        url: "url1",
-        likes: 1,
-    },
-    {
-        title: "blog2",
-        author: "author2",
-        url: "url2",
-        likes: 2,
-    },
-    {
-        title: "blog3",
-        author: "author3",
-        url: "url3",
-        likes: 3,
-    },
-];
 
 beforeEach(async () => {
     await Blog.deleteMany({});
 
-    const blogObjects = initialBlogs.map((blog) => new Blog(blog));
+    const blogObjects = testHelper.initialBlogs.map((blog) => new Blog(blog));
     const promiseArray = blogObjects.map((blogObject) => blogObject.save());
     await Promise.all(promiseArray);
 });
@@ -39,12 +19,37 @@ beforeEach(async () => {
 describe("blog api tests", () => {
     test("all blogs are returned", async () => {
         const response = await api.get("/api/blogs");
-        assert.strictEqual(response.body.length, initialBlogs.length);
+        assert.strictEqual(
+            response.body.length,
+            testHelper.initialBlogs.length
+        );
     });
 
     test("blog ID field is defined 'id' instead of '_id'", async () => {
         const response = await api.get("/api/blogs");
         assert(response.body.every((blog) => Object.hasOwn(blog, "id")));
+    });
+
+    test("a valid blog can be added", async () => {
+        const newNum = testHelper.initialBlogs.length + 1;
+        const newBlog = {
+            title: `blog${newNum}`,
+            author: `author${newNum}`,
+            url: `url${newNum}`,
+            likes: newNum,
+        };
+
+        await api
+            .post("/api/blogs")
+            .send(newBlog)
+            .expect(201)
+            .expect("Content-Type", /application\/json/);
+
+        const blogsAtEnd = await testHelper.blogsInDb();
+        assert.strictEqual(blogsAtEnd.length, newNum);
+
+        const contents = blogsAtEnd.map((blog) => blog.title);
+        assert(contents.includes(`blog${newNum}`));
     });
 
     after(async () => {
