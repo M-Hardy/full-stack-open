@@ -25,11 +25,11 @@ blogsRouter.get("/:id", (request, response, next) => {
 });
 
 blogsRouter.post("/", (request, response, next) => {
-    const note = new Blog(request.body);
+    const blog = new Blog(request.body);
 
-    note.save()
+    blog.save()
         .then((savedBlog) => {
-            response.json(savedBlog);
+            response.status(201).json(savedBlog);
         })
         .catch((error) => next(error));
 });
