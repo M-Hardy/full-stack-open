@@ -111,6 +111,35 @@ describe("when there is initially some blogs saved", () => {
             );
         });
     });
+
+    describe("Updating a blog", () => {
+        test("succeeds if number of likes is changed", async () => {
+            const blogsAtStart = await testHelper.blogsInDb();
+            const blogToUpdate = blogsAtStart[0];
+            const newLikes = blogToUpdate.likes + 8000;
+
+            const newBlog = {
+                ...blogToUpdate,
+                likes: newLikes,
+            };
+
+            await api
+                .put(`/api/blogs/${blogToUpdate.id}`)
+                .send(newBlog)
+                .expect(200);
+
+            const blogsAtEnd = await testHelper.blogsInDb();
+            const updatedBlog = blogsAtEnd.find(
+                (blog) => blog.id === blogToUpdate.id
+            );
+            assert.notDeepStrictEqual(updatedBlog.likes, blogToUpdate.likes);
+
+            const likes = blogsAtEnd.map((blog) => blog.likes);
+            assert(likes.includes(newLikes));
+
+            assert(testHelper.initialBlogs.length === blogsAtEnd.length);
+        });
+    });
     after(async () => {
         await mongoose.connection.close();
     });
