@@ -34,12 +34,13 @@ blogsRouter.post("/", async (request, response, next) => {
     }
 });
 
-blogsRouter.delete("/:id", (request, response, next) => {
-    Blog.findByIdAndDelete(request.params.id)
-        .then(() => {
-            response.sendStatus(204).end();
-        })
-        .catch((error) => next(error));
+blogsRouter.delete("/:id", async (request, response, next) => {
+    try {
+        await Blog.findByIdAndDelete(request.params.id);
+        response.sendStatus(204).end();
+    } catch (exception) {
+        next(exception);
+    }
 });
 
 blogsRouter.put("/:id", (request, response, next) => {
