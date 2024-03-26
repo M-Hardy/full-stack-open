@@ -1,0 +1,38 @@
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "Y-man",
+    "name": "Ymir, the First Man",
+    "password": "password"
+}
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "hellas",
+    "name": "Arto Hellas",
+    "password": "HAX5"
+}
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "mluukkai",
+    "name": "Matti Luukkainen",
+    "password": "hehexd"
+}
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "testing-err-http-headers-sent-error",
+    "name": "test",
+    "password": "test1"
+}
