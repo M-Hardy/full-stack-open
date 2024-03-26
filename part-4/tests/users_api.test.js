@@ -11,10 +11,15 @@ const api = supertest(app);
 
 describe("when there is one user already in db", () => {
     beforeEach(async () => {
+        await User.deleteMany({});
+        const saltRounds = 10;
+        const password = "admin_password";
+        const passwordHash = await bcrypt.hash(password, saltRounds);
+
         const user = new User({
             username: "root",
-            name: "Superuser",
-            password: "admin_pasword",
+            name: "TEST",
+            passwordHash: passwordHash,
         });
 
         await user.save();
@@ -36,7 +41,6 @@ describe("when there is one user already in db", () => {
 
         const usersAtEnd = await helper.usersInDb();
         assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1);
-
         const usernames = usersAtEnd.map((user) => user.username);
         assert(usernames.includes(newUser.username));
     });
@@ -51,15 +55,40 @@ describe("when there is one user already in db", () => {
         };
 
         const result = await api
-            .post("api/users")
+            .post("/api/users")
             .send(newUser)
             .expect(400)
-            .expect("content-type", /application\/json/);
+            .expect("Content-Type", /application\/json/);
 
         const usersAtEnd = await helper.usersInDb();
         assert.strictEqual(usersAtStart.length, usersAtEnd.length);
         assert(result.body.error.includes("expected `username` to be unique"));
     });
 
-    test("creation fails if ");
+    test("creation fails with proper statuscode and message if username is < 3 characters long", async () => {
+        const usersAtStart = await helper.usersInDb();
+
+        const invalidUsername = {
+            username: "a",
+            password: "thiswillnotwork",
+        };
+
+        const result = await api
+            .post("/api/users")
+            .send(invalidUsername)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+
+        const usersAtEnd = await helper.usersInDb();
+        assert.strictEqual(usersAtStart.length, usersAtEnd.length);
+        assert(
+            result.body.error.includes(
+                "Username must be at least 3 characters long"
+            )
+        );
+    });
+});
+
+after(async () => {
+    await mongoose.connection.close();
 });
