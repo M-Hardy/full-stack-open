@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 usersRouter.get("/", async (request, response, next) => {
     try {
-        const users = User.find({});
+        const users = await User.find({});
         response.json(users);
     } catch (exception) {
         next(exception);
@@ -15,8 +15,14 @@ usersRouter.post("/", async (request, response, next) => {
     try {
         const { username, name, password } = request.body;
 
+        if (!password || password.length < 3) {
+            return response.status(400).json({
+                error: "invalid password: password must be at least 3 characters long",
+            });
+        }
+
         const saltRounds = 10;
-        const passwordHash = bcrypt.hash(password, saltRounds);
+        const passwordHash = await bcrypt.hash(password, saltRounds);
 
         const newUser = new User({
             username,
@@ -25,7 +31,7 @@ usersRouter.post("/", async (request, response, next) => {
         });
 
         const savedUser = await newUser.save();
-        response.send(201).json(savedUser);
+        response.status(201).json(savedUser);
     } catch (exception) {
         next(exception);
     }
