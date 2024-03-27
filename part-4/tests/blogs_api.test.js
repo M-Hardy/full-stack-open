@@ -12,7 +12,6 @@ const testHelper = require("./test_helper");
 describe("when there is initially some blogs saved", () => {
     beforeEach(async () => {
         await Blog.deleteMany({});
-
         const blogObjects = testHelper.initialBlogs.map(
             (blog) => new Blog(blog)
         );
@@ -140,7 +139,7 @@ describe("when there is initially some blogs saved", () => {
             assert(testHelper.initialBlogs.length === blogsAtEnd.length);
         });
     });
-    after(async () => {
-        await mongoose.connection.close();
-    });
+});
+after(async () => {
+    await mongoose.connection.close();
 });
