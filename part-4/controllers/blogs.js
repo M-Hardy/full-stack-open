@@ -3,7 +3,10 @@ const Blog = require("../models/blog");
 
 blogsRouter.get("/", async (request, response, next) => {
     try {
-        const blogs = await Blog.find({});
+        const blogs = await Blog.find({}).populate("user", {
+            username: 1,
+            name: 1,
+        });
         response.json(blogs);
     } catch (exception) {
         next(exception);
@@ -24,10 +27,23 @@ blogsRouter.get("/:id", async (request, response, next) => {
 });
 
 blogsRouter.post("/", async (request, response, next) => {
-    const blog = new Blog(request.body);
     try {
+        const body = request.body;
+        const user = request.user;
+
+        const blog = new Blog({
+            title: body.title,
+            url: body.url,
+            likes: body.likes,
+            author: body.author,
+            user: user._id,
+        });
+
         const savedBlog = await blog.save();
-        response.status(201).json(savedBlog);
+        user.blogs = user.blogs.concat(savedBlog._id);
+        await user.save();
+
+        response.status(201).json(blog);
     } catch (exception) {
         next(exception);
     }
@@ -35,8 +51,18 @@ blogsRouter.post("/", async (request, response, next) => {
 
 blogsRouter.delete("/:id", async (request, response, next) => {
     try {
-        await Blog.findByIdAndDelete(request.params.id);
-        response.sendStatus(204).end();
+        const blog = await Blog.findById(request.params.id);
+        const user = request.user;
+        console.log(user);
+
+        if (blog.user.toString() !== user._id.toString()) {
+            return response
+                .status(400)
+                .json({ error: "token user id and blog user id do not match" });
+        }
+
+        await Blog.findByIdAndDelete(blog.id);
+        response.status(204).end();
     } catch (exception) {
         next(exception);
     }
