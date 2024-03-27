@@ -44,3 +44,55 @@ content-type: application/json
     "likes": 0
 }
 
+### Testing if user-blog reference works
+POST http://localhost:3001/api/blogs
+content-type: application/json
+
+{
+    "title": "this is the FIRST blog that should have a user attached to it!",
+    "author": "huge author, just massive",
+    "url": "https://...",
+    "likes": 1000000,
+    "userId": "660325d7409d58cd399e88fa"
+    
+}
+
+### testing blog creation with token authentication (*above requests no longer work with authentication require - kept for posterity)
+POST http://localhost:3001/api/blogs
+content-type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlktbWFuIiwiaWQiOiI2NjAzMjVkNzQwOWQ1OGNkMzk5ZTg4ZmEiLCJpYXQiOjE3MTE0ODk3Mjh9.7XE9mGOoRZX2vkCzNQ6o2PePomzdt5hW4J_jfgtScjI
+
+{
+    "title": "Testing blog creation with token authorization!",
+    "author": "me god damnit",
+    "url": "http://...",
+    "likes": 0,
+    "userId": "660325d7409d58cd399e88fa"
+
+}
+
+###
+POST http://localhost:3001/api/blogs
+content-type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlktbWFuIiwiaWQiOiI2NjAzMjVkNzQwOWQ1OGNkMzk5ZTg4ZmEiLCJpYXQiOjE3MTE0OTMzMzB9.2TrFFuafQ3yCjrqgE1lxohdFxP3bfi5wc6BvvYXmo24  
+
+{
+    "title": "Test blog creation with token extractor middleware",
+    "author": "IHATEYOU",
+    "url": "http://...",
+    "likes": 10,
+    "userId": "660325d7409d58cd399e88fa"
+}
+
+###
+POST http://localhost:3001/api/blogs
+content-type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjYwMzA3MGZhYjU1M2JmZWMxNWIyOGZmIiwiaWF0IjoxNzExNTExOTExfQ.j7a_BWAt9qOTUO0RgH7j4m_s4s3ibH6Kb8vKOSB8dq0
+
+{
+    "title": "test deletion2",
+    "author": "hehe",
+    "url": "http://...",
+    "likes": 10,
+    "userId": "6603070fab553bfec15b28ff"
+}
